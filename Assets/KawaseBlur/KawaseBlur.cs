@@ -120,12 +120,14 @@ public class KawaseBlur : ScriptableRendererFeature
 
         scriptablePass.renderPassEvent = settings.renderPassEvent;
     }
-
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        var src = renderer.cameraColorTarget;
-        scriptablePass.Setup(src);
-        renderer.EnqueuePass(scriptablePass);
+        renderer.EnqueuePass(scriptablePass); // letting the renderer know which passes will be used before allocation
+    }
+
+    public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
+    {
+        scriptablePass.Setup(renderer.cameraColorTarget);  // use of target after allocation
     }
 }
 
